@@ -4,6 +4,8 @@ Demonstrates client-side service discovery: two instances of a microservice regi
 
 ## Architecture
 
+![Architecture Diagram](screenshots/architecture.png)
+
 ```
 ┌──────────────────────────────────────────────────────┐
 │                   Service Registry                   │
@@ -49,6 +51,17 @@ python client.py
 ```
 
 The client will discover both instances from the registry and make 5 calls, routing each one to a randomly selected instance.
+
+## Demo
+
+### 1. Registry startup
+![Registry running on port 5001](screenshots/registry-startup.png)
+
+### 2. Service instances registering
+![Both instances registered with the registry](screenshots/instances-registered.png)
+
+### 3. Client — random instance selection
+![Client output showing 5 calls spread across both instances](screenshots/client-random-calls.png)
 
 ## How It Works
 
@@ -130,3 +143,14 @@ kubectl get pods -o wide
 # Each hello-service pod should show 2/2 READY (app + istio-proxy)
 istioctl dashboard kiali   # visual mesh topology
 ```
+
+### Screenshots
+
+#### Pods with Istio sidecar injected (2/2 READY)
+![kubectl get pods showing 2/2 READY for hello-service pods](screenshots/k8s-pods-sidecar.png)
+
+#### In-cluster client job output
+![kubectl logs showing discovery client running inside the cluster](screenshots/k8s-client-output.png)
+
+#### Kiali mesh topology
+![Kiali dashboard showing traffic flowing through the service mesh](screenshots/kiali-dashboard.png)
