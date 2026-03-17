@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: discovery-client
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: client
+          image: service-discovery:latest
+          imagePullPolicy: Never
+          command: ["python", "client.py"]
+          env:
+            - name: REGISTRY_URL
+              value: "http://service-registry:5001"

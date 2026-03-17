@@ -8,12 +8,13 @@ Steps:
 4. Repeat to show traffic spreading across instances
 """
 
+import os
 import random
 import time
 
 import requests
 
-REGISTRY_URL = "http://localhost:5001"
+REGISTRY_URL = os.getenv("REGISTRY_URL", "http://localhost:5001")
 SERVICE_NAME = "hello-service"
 CALLS = 5
 

@@ -7,6 +7,7 @@ Extended from ranjanr/ServiceRegistry example_service.py to include:
 """
 
 import argparse
+import os
 import signal
 import sys
 import time
@@ -15,13 +16,14 @@ from threading import Thread, Event
 import requests
 from flask import Flask, jsonify
 
-REGISTRY_URL = "http://localhost:5001"
+REGISTRY_URL = os.getenv("REGISTRY_URL", "http://localhost:5001")
+MESH_MODE = os.getenv("MESH_MODE", "false").lower() == "true"
 HEARTBEAT_INTERVAL = 10  # seconds
 
 
 def create_app(instance_name: str, port: int) -> Flask:
     app = Flask(__name__)
-    address = f"http://localhost:{port}"
+    address = os.getenv("SERVICE_ADDRESS", f"http://localhost:{port}")
 
     @app.route("/hello")
     def hello():
@@ -29,6 +31,7 @@ def create_app(instance_name: str, port: int) -> Flask:
             "message": f"Hello from {instance_name}!",
             "instance": address,
             "port": port,
+            "hostname": os.getenv("HOSTNAME", f"localhost:{port}"),
         })
 
     @app.route("/health")
@@ -42,7 +45,7 @@ class ServiceLifecycle:
     def __init__(self, name: str, port: int):
         self.name = name
         self.port = port
-        self.address = f"http://localhost:{port}"
+        self.address = os.getenv("SERVICE_ADDRESS", f"http://localhost:{port}")
         self.stop_event = Event()
 
     def register(self):
@@ -98,8 +101,8 @@ class ServiceLifecycle:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Hello microservice")
-    parser.add_argument("--port", type=int, default=8001)
-    parser.add_argument("--name", type=str, default="hello-service")
+    parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8001")))
+    parser.add_argument("--name", type=str, default=os.getenv("SERVICE_NAME", "hello-service"))
     args = parser.parse_args()
 
     lifecycle = ServiceLifecycle(args.name, args.port)
@@ -107,11 +110,13 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, lifecycle.shutdown)
     signal.signal(signal.SIGTERM, lifecycle.shutdown)
 
-    if not lifecycle.register():
-        print("Could not register with registry. Is service_registry.py running?")
-        sys.exit(1)
-
-    lifecycle.start_heartbeat()
+    if not MESH_MODE:
+        if not lifecycle.register():
+            print("Could not register with registry. Is service_registry.py running?")
+            sys.exit(1)
+        lifecycle.start_heartbeat()
+    else:
+        print(f"[{args.name}] MESH_MODE enabled — skipping custom registry")
 
     app = create_app(args.name, args.port)
     print(f"[{args.name}] HTTP server listening on port {args.port}")
