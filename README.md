@@ -58,7 +58,8 @@ The client will discover both instances from the registry and make 5 calls, rout
 ![Registry running on port 5001](screenshots/registry-startup.png)
 
 ### 2. Service instances registering
-![Both instances registered with the registry](screenshots/instances-registered.png)
+![Instance 1 registered at port 8001](screenshots/instances-registered1.png)
+![Instance 2 registered at port 8002](screenshots/instances-registered2.png)
 
 ### 3. Client — random instance selection
 ![Client output showing 5 calls spread across both instances](screenshots/client-random-calls.png)
