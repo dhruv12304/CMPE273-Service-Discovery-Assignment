@@ -22,6 +22,11 @@ echo "==> Deploying hello-service (2 replicas)..."
 kubectl apply -f k8s/hello-service.yaml
 kubectl rollout status deployment/hello-service
 
+echo "==> Installing Istio addons (Kiali + Prometheus)..."
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.29/samples/addons/prometheus.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.29/samples/addons/kiali.yaml
+kubectl rollout status deployment/kiali -n istio-system
+
 echo "==> Applying Istio traffic rules..."
 kubectl apply -f k8s/istio-traffic.yaml
 

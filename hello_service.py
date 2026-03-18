@@ -21,9 +21,18 @@ MESH_MODE = os.getenv("MESH_MODE", "false").lower() == "true"
 HEARTBEAT_INTERVAL = 10  # seconds
 
 
+def _resolve_address(port: int) -> str:
+    raw = os.getenv("SERVICE_ADDRESS", "")
+    if not raw:
+        return f"http://localhost:{port}"
+    if not raw.startswith("http"):
+        return f"http://{raw}:{port}"
+    return raw
+
+
 def create_app(instance_name: str, port: int) -> Flask:
     app = Flask(__name__)
-    address = os.getenv("SERVICE_ADDRESS", f"http://localhost:{port}")
+    address = _resolve_address(port)
 
     @app.route("/hello")
     def hello():
@@ -45,7 +54,7 @@ class ServiceLifecycle:
     def __init__(self, name: str, port: int):
         self.name = name
         self.port = port
-        self.address = os.getenv("SERVICE_ADDRESS", f"http://localhost:{port}")
+        self.address = _resolve_address(port)
         self.stop_event = Event()
 
     def register(self):
