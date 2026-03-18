@@ -2,6 +2,16 @@
 
 Demonstrates client-side service discovery: two instances of a microservice register with a central registry; a client discovers them and routes calls randomly across instances.
 
+## Table of Contents
+
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Demo](#demo)
+- [How It Works](#how-it-works)
+- [API Reference](#api-reference)
+- [Optional: Service Mesh with Istio](#optional-service-mesh-with-istio)
+- [Demo Video](#demo-video)
+
 ## Architecture
 
 ![Architecture Diagram](screenshots/architecture.png)
@@ -155,3 +165,7 @@ istioctl dashboard kiali   # visual mesh topology
 
 #### Kiali mesh topology
 ![Kiali dashboard showing traffic flowing through the service mesh](screenshots/kiali-dashboard.png)
+
+## Demo Video
+
+[Download / Watch Demo Video](https://github.com/dhruv12304/CMPE273-Service-Discovery-Assignment/releases/download/v1.0/DemoVideo.mp4)
