@@ -6,7 +6,7 @@ Demonstrates client-side service discovery: two instances of a microservice regi
 
 - [Architecture](#architecture)
 - [Quick Start](#quick-start)
-- [Demo](#demo)
+- [Snapshots](#snapshots)
 - [How It Works](#how-it-works)
 - [API Reference](#api-reference)
 - [Optional: Service Mesh with Istio](#optional-service-mesh-with-istio)
@@ -62,7 +62,7 @@ python client.py
 
 The client will discover both instances from the registry and make 5 calls, routing each one to a randomly selected instance.
 
-## Demo
+## Snapshots
 
 ### 1. Registry startup
 ![Registry running on port 5001](screenshots/registry-startup.png)
